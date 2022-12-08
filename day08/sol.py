@@ -37,8 +37,6 @@ def part1():
 
 def part2():
     def count(l, curr):
-        if not l:
-            return 0
         for i, v in enumerate(l):
             if v >= curr:
                 return i + 1
