@@ -43,7 +43,7 @@ def part1():
     T = S
     visited = set()
     for dir, val in get_input():
-        for i in range(val):
+        for _ in range(val):
             H = move(H, dir)
 
             T = move_towards(T, H)
@@ -58,7 +58,7 @@ def part2():
 
     visited = set()
     for dir, val in get_input():
-        for i in range(val):
+        for _ in range(val):
             H = move(H, dir)
             last = H
             for i, T in enumerate(Ts):
