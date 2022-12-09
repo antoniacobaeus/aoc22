@@ -20,21 +20,21 @@ def move_towards(pos, target):
         return pos
 
     if pos[0] > target[0] and pos[1] > target[1]:
-        return pos[0] - 1, pos[1] - 1
+        return move(move(pos, "L"), "D")
     elif pos[0] > target[0] and pos[1] < target[1]:
-        return pos[0] - 1, pos[1] + 1
+        return move(move(pos, "L"), "U")
     elif pos[0] < target[0] and pos[1] > target[1]:
-        return pos[0] + 1, pos[1] - 1
+        return move(move(pos, "R"), "D")
     elif pos[0] < target[0] and pos[1] < target[1]:
-        return pos[0] + 1, pos[1] + 1
+        return move(move(pos, "R"), "U")
     elif pos[0] > target[0]:
-        return pos[0] - 1, pos[1]
+        return move(pos, "L")
     elif pos[0] < target[0]:
-        return pos[0] + 1, pos[1]
+        return move(pos, "R")
     elif pos[1] > target[1]:
-        return pos[0], pos[1] - 1
+        return move(pos, "D")
     elif pos[1] < target[1]:
-        return pos[0], pos[1] + 1
+        return move(pos, "U")
 
 
 def part1():
