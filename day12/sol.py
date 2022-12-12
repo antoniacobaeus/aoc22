@@ -27,44 +27,41 @@ def get_input():
         return construct_grid(grid)
 
 
-def get_neighbours(current, grid):
+def get_neighbours(current, grid, rev=False):
     cx, cy = current
     ch = grid[cy][cx]
     for x, y in [(0, 1), (0, -1), (1, 0), (-1, 0)]:
         if 0 <= cx + x < len(grid[0]) and 0 <= cy + y < len(grid):
-            if grid[cy + y][cx + x] - ch <= 1:
+            if (not rev and grid[cy + y][cx + x] - ch <= 1) \
+                    or (rev and ch - grid[cy + y][cx + x] <= 1):
                 yield (cx + x, cy + y)
 
 
-def bfs(start, end, grid):
+def bfs(start, is_end, grid, down=False):
     queue = [(start, 0)]
     visited = set()
     while queue:
         current, dist = queue.pop(0)
-        if current == end:
+        if is_end(*current):
             return dist
         if current in visited:
             continue
         visited.add(current)
-        for neighbour in get_neighbours(current, grid):
+        for neighbour in get_neighbours(current, grid, down):
             queue.append((neighbour, dist + 1))
     return -1
 
 
 def part1():
     start, end, grid = get_input()
-    return bfs(start, end, grid)
+    def is_end(x, y): return (x, y) == end
+    return bfs(start, is_end, grid)
 
 
 def part2():
     start, end, grid = get_input()
-    starts = []
-    for y in range(len(grid)):
-        for x in range(len(grid[y])):
-            if grid[y][x] == grid[start[1]][start[0]]:
-                starts += [(x, y)]
-    dists = [bfs(start, end, grid) for start in starts]
-    return min(filter(lambda x: x > 0, dists))
+    def is_end(x, y): return grid[y][x] == grid[start[1]][start[0]]
+    return bfs(end, is_end, grid, True)
 
 
 if __name__ == "__main__":
