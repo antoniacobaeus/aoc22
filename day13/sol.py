@@ -26,8 +26,6 @@ def compare(x, y):
     elif isinstance(y, list):
         return compare([x], y)
     else:
-        if x == y:
-            return None
         return x < y
 
 
