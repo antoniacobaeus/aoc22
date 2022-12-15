@@ -1,6 +1,3 @@
-from functools import reduce
-
-
 def get_input():
     with open("input") as f:
         for line in f.readlines():
@@ -16,16 +13,19 @@ def manhattan_distance(x1, y1, x2, y2):
     return abs(x1 - x2) + abs(y1 - y2)
 
 
-def part1():
+def parse_input(data):
     distances = {}
     beacons = set()
-    for (x1, y1), (x2, y2) in get_input():
+    for (x1, y1), (x2, y2) in data:
         distances[(x1, y1)] = manhattan_distance(x1, y1, x2, y2)
         beacons.add((x2, y2))
-    y = 2000000
+    return distances, beacons
+
+
+def part1(y=10):
+    distances, beacons = parse_input(get_input())
     points = set()
-    for k, v in distances.items():
-        x1, y1 = k
+    for (x1, y1), v in distances.items():
         h = v - abs(y - y1)
         if h < 0:
             continue
@@ -33,10 +33,31 @@ def part1():
     return len(points) - len(list(filter(lambda c: c[1] == y, beacons)))
 
 
-def part2():
-    pass
+def get_edge_of_circle(radius, x1, y1):
+    for x in range(x1 - radius, x1 + radius + 1):
+        y = y1 - radius + abs(x - x1)
+        yield x, y
+        y = y1 + radius - abs(x - x1)
+        yield x, y
+
+
+def in_circle(x, y, x1, y1, radius):
+    return manhattan_distance(x, y, x1, y1) - radius <= 0
+
+
+def part2(M=20):
+    #  Math is hard...
+    #  https://math.stackexchange.com/questions/3476324/find-closest-location-not-occupied-by-circles
+    distances, _ = parse_input(get_input())
+    for (x1, x2), v in distances.items():
+        for x, y in get_edge_of_circle(v+1, x1, x2):
+            if not (0 < x < M and 0 < y < M):
+                continue
+            if any(in_circle(x, y, cx, cy, v) for (cx, cy), v in distances.items()):
+                continue
+            return x * 4_000_000 + y
 
 
 if __name__ == "__main__":
-    print(part1())
-    print(part2())
+    print(part1(2_000_000))
+    print(part2(4_000_000))
