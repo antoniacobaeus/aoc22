@@ -1,3 +1,6 @@
+from functools import reduce
+
+
 def get_input():
     with open("input") as f:
         for line in f.readlines():
@@ -20,15 +23,14 @@ def part1():
         distances[(x1, y1)] = manhattan_distance(x1, y1, x2, y2)
         beacons.add((x2, y2))
     y = 2000000
-    counted = set()
+    points = set()
     for k, v in distances.items():
         x1, y1 = k
         h = v - abs(y - y1)
         if h < 0:
             continue
-        for x in range(x1 - h, x1 + h + 1):
-            counted.add((x, y))
-    return len(counted) - len(list(filter(lambda c: c[1] == y, beacons)))
+        points |= set(range(x1 - h, x1 + h + 1))
+    return len(points) - len(list(filter(lambda c: c[1] == y, beacons)))
 
 
 def part2():
